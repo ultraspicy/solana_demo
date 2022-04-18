@@ -7,14 +7,10 @@
         "setup": "npm run compile && node build/setup.js"
     },
     "dependencies": {
-        "@solana/spl-token": "^0.1.8",
+        "@solana/spl-token": "^0.2.0",
         "@solana/web3.js": "^1.37.2",
         "bn.js": "^5.2.0",
-        "buffer-layout": "^1.2.2",
         "tsc": "^2.0.4",
         "typescript": "^4.6.3"
-    },
-    "devDependencies": {
-        "@types/bn.js": "^5.1.0"
     }
 }

@@ -6,12 +6,16 @@ use solana_program::{
     msg,
 };
 
+use crate::processor::*;
+
 entrypoint!(process_instruction);
 fn process_instruction(
-    _program_id: &Pubkey,
-    _accounts: &[AccountInfo],
-    _instruction_data: &[u8],
+    program_id: &Pubkey,
+    accounts: &[AccountInfo],
+    instruction_data: &[u8],
 ) -> ProgramResult {
-    msg!("process_instruction invoked");
+    let result = Processor::process(program_id, accounts, instruction_data);
+    msg!("the program error {:?}", result.err());
+    
     Ok(())
 }

@@ -52,7 +52,6 @@ impl Processor {
         msg!("the demo_account {:?}", demo_account);
         let mut demo_account_info = Demo::unpack_unchecked(&demo_account.try_borrow_data()?)?;
         msg!("the demo_account_info {:?}", demo_account_info);
-         // what the hell is `is_initialized()`
         if demo_account_info.is_initialized() {
             return Err(ProgramError::AccountAlreadyInitialized);
         }
@@ -71,6 +70,15 @@ impl Processor {
         accounts: &[AccountInfo],
         instruction_data: &[u8],
     ) -> ProgramResult {
+        let account_info_iter = &mut accounts.iter();
+        let _ = next_account_info(account_info_iter)?;
+        let demo_account = next_account_info(account_info_iter)?;
+        msg!("the demo_account before add_one {:?}", demo_account);
+        let mut demo_account_info = Demo::unpack_unchecked(&demo_account.try_borrow_data()?)?;
+        demo_account_info.counter = demo_account_info.counter + 1;
+        Demo::pack(demo_account_info, &mut demo_account.try_borrow_mut_data()?)?;
+        //msg!("the demo_account_info {:?}", demo_account_info);
+        msg!("the demo_account after add_one {:?}", demo_account);
         Ok(())
     }
 }

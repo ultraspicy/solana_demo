@@ -14,8 +14,8 @@ fn process_instruction(
     accounts: &[AccountInfo],
     instruction_data: &[u8],
 ) -> ProgramResult {
-    let result = Processor::process(program_id, accounts, instruction_data);
-    msg!("the program error {:?}", result.err());
-    
-    Ok(())
+    msg!("the program_id {:?}", program_id);
+    msg!("the accounts {:?}", accounts);
+    msg!("the instruction_data {:?}", instruction_data);
+    Processor::process(program_id, accounts, instruction_data)
 }

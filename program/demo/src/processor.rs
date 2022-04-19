@@ -50,7 +50,6 @@ impl Processor {
 
         let demo_account = next_account_info(account_info_iter)?;
         msg!("the demo_account {:?}", demo_account);
-        // what the hell is `unpack_unchecked()`
         let mut demo_account_info = Demo::unpack_unchecked(&demo_account.try_borrow_data()?)?;
         msg!("the demo_account_info {:?}", demo_account_info);
          // what the hell is `is_initialized()`

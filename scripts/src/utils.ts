@@ -29,3 +29,33 @@ export const getProgramId = () => {
         process.exit(1);
     }
 }
+
+/**
+ * Layout for a public key
+ */
+const publicKey = (property = "publicKey") => {
+    // The number of bytes in the blob
+    return BufferLayout.blob(32, property);
+};
+
+/**
+ * Layout for a 64bit unsigned value
+ */
+const uint64 = (property = "uint64") => {
+    return BufferLayout.blob(8, property);
+};
+
+/**
+    pub struct Demo {
+        pub is_initialized: bool,
+        pub counter: u32,
+    }
+*/
+export const ACCOUNT_DATA_LAYOUT = BufferLayout.struct([
+    BufferLayout.u8("is_initialized"),
+    BufferLayout.u32("counter"),
+//     publicKey("initializerPubkey"),
+//     publicKey("initializerTempTokenAccountPubkey"),
+//     publicKey("initializerReceivingTokenAccountPubkey"),
+//     uint64("expectedAmount"),
+]);

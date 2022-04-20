@@ -57,30 +57,15 @@ const setup = async() => {
           ),
     });
 
-    const add_one_ix = new TransactionInstruction({
-        programId: programId,
-        keys: [
-            {pubkey: aliceKeypair.publicKey, isSigner: true, isWritable: false},
-            {pubkey: demoAccountKeypair.publicKey, isSigner: false, isWritable: true},
-        ],
-        data: Buffer.from(
-            Uint8Array.of(1,1,2,3,4)
-          ),
-    });
-
     // build transactions 
     const tx = new Transaction().add(
         createDemoAccountIx,
         init_ix,
     );
-
-    const add_one_tx = new Transaction().add(
-        add_one_ix,
-    );
     console.log("Sending tx...");
     await connection.sendTransaction(
-        add_one_tx,
-        [aliceKeypair],
+        tx,
+        [aliceKeypair, demoAccountKeypair],
         {skipPreflight: false, preflightCommitment: "confirmed" }
     );
 }

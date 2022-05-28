@@ -7,7 +7,26 @@
     <cargoProject FILE="$PROJECT_DIR$/program/demo/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c99d93ac-1a9c-4551-aef2-e244ed2ee519" name="Changes" comment="" />
+    <list default="true" id="c99d93ac-1a9c-4551-aef2-e244ed2ee519" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/program/demo/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/program/demo/.idea/aws.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/program/demo/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/program/demo/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/program/demo/.idea/demo.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/program/demo/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/program/demo/.idea/runConfigurations.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/program/demo/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/.idea/aws.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/.idea/runConfigurations.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/.idea/scripts.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,6 +58,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
+    <property name="org.rust.disableDetachedFileInspection/Users/jianfeng/Developer/solana_demo/program/demo/src/entrypoint.rs" value="true" />
   </component>
   <component name="RustProjectSettings">
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />

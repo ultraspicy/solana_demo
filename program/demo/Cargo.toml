@@ -7,8 +7,13 @@ edition = "2021"
 
 [dependencies]
 solana-program = "1.9.4"
+# This library provides a convenient derive macro for the standard library's std::error::Error trait.
 thiserror = "1.0.30"
+spl-token = {version = "3.2.0", features = ["no-entrypoint"]}
 arrayref = "0.3.6"
 
 [lib]
 crate-type = ["cdylib", "lib"]
+
+[features]
+no-entrypoint = []

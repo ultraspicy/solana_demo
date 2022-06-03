@@ -45,17 +45,25 @@ impl Processor {
     ) -> ProgramResult {
         let account_info_iter = &mut accounts.iter();
 
+        // Alice main account
         let initializer = next_account_info(account_info_iter)?;
         if !initializer.is_signer {
             return Err(ProgramError::MissingRequiredSignature);
         }
+        // token X account, having expected trading amount
+        // ?how about the fee of creating such account?
         let temp_token_account =  next_account_info(account_info_iter)?;
 
+        // token Y account, have nothing before the trade go through
+        // ?how about the fee of creating such account?
         let token_to_receive_account = next_account_info(account_info_iter)?;
+
+        // ? is the token a fixed one? shall we parameterize it
         if *token_to_receive_account.owner != spl_token::id() {
             return Err(ProgramError::IncorrectProgramId);
         }
 
+        // the address of escrow account
         let escrow_account = next_account_info(account_info_iter)?;
         let rent = &Rent::from_account_info(next_account_info(account_info_iter)?)?;
         if !rent.is_exempt(escrow_account.lamports(), escrow_account.data_len()) {
@@ -105,16 +113,20 @@ impl Processor {
         amount_expected_by_taker: u64,
     ) -> ProgramResult {
         let account_info_iter = &mut accounts.iter();
+        // Bob's main account
         let taker = next_account_info(account_info_iter)?;
 
         if !taker.is_signer {
             return Err(ProgramError::MissingRequiredSignature);
         }
 
+        // Bob's Y token account
         let takers_sending_token_account = next_account_info(account_info_iter)?;
 
+        // Bob's X token account
         let takers_token_to_receive_account = next_account_info(account_info_iter)?;
 
+        // PDA's X token account
         let pdas_temp_token_account = next_account_info(account_info_iter)?;
         let pdas_temp_token_account_info =
             TokenAccount::unpack(&pdas_temp_token_account.try_borrow_data()?)?;
@@ -124,7 +136,9 @@ impl Processor {
             return Err(EscrowError::ExpectedAmountMismatch.into());
         }
 
+        // Alice main account
         let initializers_main_account = next_account_info(account_info_iter)?;
+        // Alice's Y token account
         let initializers_token_to_receive_account = next_account_info(account_info_iter)?;
         let escrow_account = next_account_info(account_info_iter)?;
 

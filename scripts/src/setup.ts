@@ -2,72 +2,117 @@ import {
     Connection,
     LAMPORTS_PER_SOL,
     PublicKey,
-    SystemProgram,
     Signer,
-    Transaction,
-    TransactionInstruction,
 } from "@solana/web3.js";
 
-import BN = require("bn.js");
-
+import {Token, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import {
     getKeypair,
     getPublicKey,
-    getProgramId,
-    ACCOUNT_DATA_LAYOUT,
+    getTokenBalance,
+    writePublicKey,
 } from "./utils";
-   
-import { AccountLayout, Token, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
-const setup = async() => {
-    const alicePublicKey = getPublicKey("alice");
-    const aliceKeypair = getKeypair("alice");
-    const demoAccountPublicKey = getPublicKey("demo");
-    const demoAccountKeypair = getKeypair("demo");
-    const connection = new Connection("http://localhost:8899", "confirmed");
-    const programId = getProgramId();
-
-    console.log("Requesting SOL for Alice...");
-    await connection.requestAirdrop(alicePublicKey, LAMPORTS_PER_SOL * 3);
-
-    // build instructions
-    const createDemoAccountIx = SystemProgram.createAccount({
-        // Amount of space in bytes to allocate to the created account
-        space: ACCOUNT_DATA_LAYOUT.span,
-        // Amount of lamports to transfer to the created account
-        lamports: await connection.getMinimumBalanceForRentExemption(
-          ACCOUNT_DATA_LAYOUT.span
-        ),
-        // The account that will transfer lamports to the created account
-        fromPubkey: alicePublicKey,
-        // Public key of the created account
-        newAccountPubkey: demoAccountPublicKey,
-        // Public key of the program to assign as the owner of the created account
-        programId: programId,
-    });
-
-    const init_ix = new TransactionInstruction({
-        programId: programId,
-        keys: [
-            {pubkey: aliceKeypair.publicKey, isSigner: true, isWritable: false},
-            {pubkey: demoAccountKeypair.publicKey, isSigner: false, isWritable: true},
-        ],
-        data: Buffer.from(
-            Uint8Array.of(0,1,2,3,4)
-          ),
-    });
-
-    // build transactions 
-    const tx = new Transaction().add(
-        createDemoAccountIx,
-        init_ix,
+const createMint = (
+    connection: Connection,
+    {publicKey, secretKey}: Signer
+) => {
+    return Token.createMint(
+        connection,
+        {
+            publicKey,
+            secretKey,
+        },
+        publicKey,
+        null,
+        0,
+        TOKEN_PROGRAM_ID
     );
-    console.log("Sending tx...");
-    await connection.sendTransaction(
-        tx,
-        [aliceKeypair, demoAccountKeypair],
-        {skipPreflight: false, preflightCommitment: "confirmed" }
-    );
+};
+
+const setupMint = async (
+    name: string,
+    connection: Connection,
+    alicePublicKey: PublicKey,
+    bobPublicKey: PublicKey,
+    clientKeypair: Signer
+): Promise<[Token, PublicKey, PublicKey]> => {
+    console.log(`Creating Mint ${name}...`);
+    const mint = await createMint(connection, clientKeypair);
+    writePublicKey(mint.publicKey, `mint_${name.toLocaleLowerCase()}`);
+
+    console.log(`Creating Alice TokenAccount for ${name}...`);
+    const aliceTokenAccount = await mint.createAccount(alicePublicKey);
+    writePublicKey(aliceTokenAccount, `alice_${name.toLowerCase()}`);
+
+    console.log(`Creating Bob TokenAccount for ${name}...`);
+    const bobTokenAccount = await mint.createAccount(bobPublicKey);
+    writePublicKey(bobTokenAccount, `bob_${name.toLowerCase()}`);
+
+    return [mint, aliceTokenAccount, bobTokenAccount];
 }
-
-setup();
+   
+const setup = async () => {
+    const alicePublicKey = getPublicKey("alice");
+    const bobPublicKey = getPublicKey("bob");
+    const clientKeypair = getKeypair("id");
+  
+    const connection = new Connection("http://localhost:8899", "confirmed");
+    console.log("Requesting SOL for Alice...");
+    // some networks like the local network provide an airdrop function (mainnet of course does not)
+    await connection.requestAirdrop(alicePublicKey, LAMPORTS_PER_SOL * 10);
+    console.log("Requesting SOL for Bob...");
+    await connection.requestAirdrop(bobPublicKey, LAMPORTS_PER_SOL * 10);
+    console.log("Requesting SOL for Client...");
+    await connection.requestAirdrop(
+      clientKeypair.publicKey,
+      LAMPORTS_PER_SOL * 10
+    );
+  
+    const [mintX, aliceTokenAccountForX, bobTokenAccountForX] = await setupMint(
+      "X",
+      connection,
+      alicePublicKey,
+      bobPublicKey,
+      clientKeypair
+    );
+    console.log("Sending 50X to Alice's X TokenAccount...");
+    await mintX.mintTo(aliceTokenAccountForX, clientKeypair.publicKey, [], 50);
+  
+    const [mintY, aliceTokenAccountForY, bobTokenAccountForY] = await setupMint(
+      "Y",
+      connection,
+      alicePublicKey,
+      bobPublicKey,
+      clientKeypair
+    );
+    console.log("Sending 50Y to Bob's Y TokenAccount...");
+    await mintY.mintTo(bobTokenAccountForY, clientKeypair.publicKey, [], 50);
+  
+    console.log("✨Setup complete✨\n");
+    
+    console.table([
+      {
+        "Alice Token Account X": await getTokenBalance(
+          aliceTokenAccountForX,
+          connection
+        ),
+        "Alice Token Account Y": await getTokenBalance(
+          aliceTokenAccountForY,
+          connection
+        ),
+        "Bob Token Account X": await getTokenBalance(
+          bobTokenAccountForX,
+          connection
+        ),
+        "Bob Token Account Y": await getTokenBalance(
+          bobTokenAccountForY,
+          connection
+        ),
+      },
+    ]);
+    console.log("");
+  };
+  
+  setup();
+  

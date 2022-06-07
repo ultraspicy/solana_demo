@@ -61,7 +61,7 @@ export const getTokenBalance = async (
 /**
  * Layout for a public key
  */
-const publicKey = (property = "publicKey") => {
+const publicKey = (property: string) => {
     // The number of bytes in the blob
     return BufferLayout.blob(32, property);
 };
@@ -69,7 +69,7 @@ const publicKey = (property = "publicKey") => {
 /**
  * Layout for a 64bit unsigned value
  */
-const uint64 = (property = "uint64") => {
+const uint64 = (property: string) => {
     return BufferLayout.blob(8, property);
 };
 
@@ -79,12 +79,12 @@ export const ESCROW_ACCOUNT_DATA_LAYOUT = BufferLayout.struct([
     publicKey("initializerTempTokenAccountPubkey"),
     publicKey("initializerReceivingTokenAccountPubkey"),
     uint64("expectedAmount"),
-  ]);
+]);
   
-  export interface EscrowLayout {
+export interface EscrowLayout {
     isInitialized: number;
     initializerPubkey: Uint8Array;
     initializerReceivingTokenAccountPubkey: Uint8Array;
     initializerTempTokenAccountPubkey: Uint8Array;
     expectedAmount: Uint8Array;
-  }
+}

@@ -30,6 +30,16 @@ const createMint = (
     );
 };
 
+/**
+ * create ${name} token under authority of clientKeypair, then 
+ * create two token accounts for alice and bob, respectively
+ * @param name the name of the token
+ * @param connection 
+ * @param alicePublicKey 
+ * @param bobPublicKey 
+ * @param clientKeypair the token creator and authority
+ * @returns token accounts public key of alice and bob
+ */
 const setupMint = async (
     name: string,
     connection: Connection,
@@ -64,10 +74,7 @@ const setup = async () => {
     console.log("Requesting SOL for Bob...");
     await connection.requestAirdrop(bobPublicKey, LAMPORTS_PER_SOL * 10);
     console.log("Requesting SOL for Client...");
-    await connection.requestAirdrop(
-      clientKeypair.publicKey,
-      LAMPORTS_PER_SOL * 10
-    );
+    await connection.requestAirdrop(clientKeypair.publicKey, LAMPORTS_PER_SOL * 10);
   
     const [mintX, aliceTokenAccountForX, bobTokenAccountForX] = await setupMint(
       "X",
@@ -90,7 +97,7 @@ const setup = async () => {
     await mintY.mintTo(bobTokenAccountForY, clientKeypair.publicKey, [], 50);
   
     console.log("✨Setup complete✨\n");
-    
+
     console.table([
       {
         "Alice Token Account X": await getTokenBalance(

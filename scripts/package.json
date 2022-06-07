@@ -4,7 +4,8 @@
     "description": "just for fun",
     "scripts": {
         "compile": "tsc -p ./tsconfig.json",
-        "setup": "npm run compile && node build/setup.js"
+        "setup": "npm run compile && node build/setup.js",
+        "all": "npm run compile && node build/setup.js && node build/alice.js && node build/bob.js"
     },
     "dependencies": {
         "@solana/spl-token": "^0.2.0",
